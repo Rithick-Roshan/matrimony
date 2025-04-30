@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:false
     },
+    profile:{
+        type:String,
+        required:true,
+    },
     resetToken:String,
     resetTokenExpiration:Date,
 },

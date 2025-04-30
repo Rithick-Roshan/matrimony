@@ -1,15 +1,15 @@
 const User = require("../models/user.model");
 const { generateToken } = require("../util/jwt");
 const crypto = require("crypto");
-const sendEmail = require("../util/sendSmail");
+const sendEmail = require("../util/sendEmail");
 
 exports.register = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { profile,username, email, password } = req.body;
     console.log(req.body);
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "User already exists" });
   
-    const user = await User.create({ username, email, password });
+    const user = await User.create({ profile,username, email, password });
     const token = generateToken(user);
   
     res.status(201).json({ user, token });
@@ -40,8 +40,8 @@ exports.verify = async (req, res) => {
   };
   
   exports.forgotPassword = async (req, res) => {
-    const { username } = req.body;
-    const user = await User.findOne({ username });
+    const { email } = req.body;
+    const user = await User.findOne({ email});
     if (!user) return res.status(404).json({ message: "User not found" });
   
     const resetToken = crypto.randomBytes(32).toString("hex");
